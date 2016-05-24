@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+	{% parent %}
+	<script type="text/javascript" src="/javascripts/jquery-1.12.3.min.js"></script>
+	{% if css_list %}
+	  	{% for link in css_list %}
+			<link rel="stylesheet" href="{{ link }}">
+		{% endfor %}
+	{% endif %}
+	{% if js_list %}
+	  	{% for link in js_list %}
+	  		<script type="text/javascript" src="{{ link }}"></script>
+		{% endfor %}
+	{% endif %}
+	<style>
+	#js_input_file {
+		line-height: 50px;
+	}
+	</style>
+{% endblock %}
+
+{% block content %}
+<form id="js_frm" enctype="multipart/form-data" method="post">
+<input type="file" multiple="multiple" id="js_input_file"/>
+</form>
+<p id="js_info"></p>
+<script type="text/javascript">
+	var input_file = document.getElementById('js_input_file');
+	var frm = document.getElementById('js_frm');
+	// console.log(input_file)
+	input_file.onchange = function() {
+		var params = new FormData();
+
+		var files = input_file.files;
+		if(files.length == 0) return;
+		for(var i=0,len=files.length; i < len;i++) {
+			params.append('files['+i+']',files[i]);
+		}
+		$.ajax({
+			type:'post',
+			url: '/upload',
+			data: params,
+			cache: false,
+			crossDomain: true,
+			processData: false,
+	       	contentType: false,
+	        dataType:'json',
+	        success:function(data){
+	        	alert('上传成功!');
+	        	input_file.value = '';
+	        },
+	        error:function(){
+	        	console.log(arguments);
+	        	alert('上传失败!');
+	        	input_file.value = '';
+	        },
+	        xhrFields: {
+                onprogress: function(_progress) {
+                    var percentage = Math.floor((_progress.loaded / _progress.total) * 100);
+                    if(typeof progress === 'function') {
+                    	console.log(_progress,percentage);
+                    }
+                    $('#js_info').html(percentage+'%');
+                }
+            }
+		});
+	}
+</script>
+{% endblock %}
