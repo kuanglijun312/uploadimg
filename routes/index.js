@@ -21,7 +21,6 @@ router.post('/upload', function(req, res, next) {
       res.json({success: true});
     });
     form.on('file', function(name, file) {
-    	console.log(arguments);
       var dir = 'klj--------dir'
       fs.existsSync(dir) || fs.mkdirSync(dir);
       

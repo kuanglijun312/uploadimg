@@ -22,7 +22,7 @@
 
 {% block content %}
 <form id="js_frm" enctype="multipart/form-data" method="post">
-<input type="file" multiple="multiple" id="js_input_file"/>
+<input type="file" name="files"  multiple="multiple" id="js_input_file"/>
 </form>
 <p id="js_info"></p>
 <script type="text/javascript">
@@ -30,13 +30,14 @@
 	var frm = document.getElementById('js_frm');
 	// console.log(input_file)
 	input_file.onchange = function() {
-		var params = new FormData();
+		console.log(frm,input_file.value);
+		var params = new FormData(frm);
 
-		var files = input_file.files;
-		if(files.length == 0) return;
-		for(var i=0,len=files.length; i < len;i++) {
-			params.append('files['+i+']',files[i]);
-		}
+		// var files = input_file.files;
+		// if(files.length == 0) return;
+		// for(var i=0,len=files.length; i < len;i++) {
+		// 	params.append('files['+i+']',files[i]);
+		// }
 		$.ajax({
 			type:'post',
 			url: '/upload',
